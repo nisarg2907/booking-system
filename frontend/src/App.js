@@ -1,14 +1,28 @@
-import React from "react";
-import { useState,useEffect } from "react";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import Home from './components/main/Home';
+
+const appStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: '100vh',
+};
 
 function App() {
-  const [loading,setLoading] = useState(true);
-
-  if(loading)return <h1>Loading.....</h1>
   return (
-    <h1>
-      welcome to bookings hub
-    </h1>
+    <Router>
+      <div style={appStyle}>
+        <Routes>
+          <Route path="/login" element={<LoginForm/>} />
+          <Route path="/register" element={<RegisterForm/>} />
+          {/* Add other routes as needed */}
+          <Route path="/home" element={<Home/>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
