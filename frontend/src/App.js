@@ -3,25 +3,24 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import Home from './components/main/Home';
+import DashBoard from './components/main/DashBoard';
+import Navbar from './components/main/Navbar';
 
-const appStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '100vh',
-};
+
 
 function App() {
   return (
     <Router>
-      <div style={appStyle}>
-        <Routes>
+       <Routes>
+ 
+       
           <Route path="/login" element={<LoginForm/>} />
           <Route path="/register" element={<RegisterForm/>} />
-          {/* Add other routes as needed */}
           <Route path="/home" element={<Home/>} />
+          <Route path="/dashboard" element={<DashBoard/>} />
+         
         </Routes>
-      </div>
+     
     </Router>
   );
 }

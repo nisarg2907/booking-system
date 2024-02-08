@@ -1,11 +1,20 @@
-import React from 'react'
+import React from 'react';
+
+import Navbar from './Navbar';
+import DashBoard from './DashBoard';
+import RoomsList from './RoomsList';
 
 const Home = () => {
   return (
-    <div>
-      Welcome home
-    </div>
-  )
-}
+    <>
+      <Navbar user="John"  />
+      <RoomsList/>
+      <DashBoard/>
+    </>
+     
+    
+  );
+};
 
-export default Home
+
+export default Home;
