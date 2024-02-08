@@ -31,11 +31,11 @@ const Navbar = () => {
         alignItems: 'center',
       }}
     >
-      <div>
+      
         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
           Welcome, {authState.user?.username}
         </Typography>
-      </div>
+     
       <div style={{ display: 'flex', gap: '1rem', marginLeft: 'auto' }}>
         <Button color="inherit" component={Link} to="/dashboard">
           Dashboard

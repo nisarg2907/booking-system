@@ -1,20 +1,35 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import Navbar from './Navbar';
-import DashBoard from './DashBoard';
 import RoomsList from './RoomsList';
+import { useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const authState = useSelector((state) => state.auth);
+  const isLoggedIn = authState.isLoggedIn;
+
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   }
+  // }, [isLoggedIn, navigate]);
+
   return (
     <>
-      <Navbar   />
-      <RoomsList/>
-      <DashBoard/>
+      {isLoggedIn ? (
+        <div style={{ backgroundColor: '#e1f5fe', minHeight: '100vh' }}>
+          <Navbar />
+          <RoomsList />
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', paddingTop: '50px' }}>
+          <h2>You need to have an account</h2>
+          <Link to="/login">Login to Your Account first</Link>
+        </div>
+      )}
     </>
-     
-    
   );
 };
-
 
 export default Home;

@@ -3,8 +3,6 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
-  ImageList,
-  ImageListItem,
   Button,
   Typography,
   CircularProgress,
@@ -15,11 +13,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
 } from '@mui/material';
 import { format } from 'date-fns';
 
 const Room = ({ room }) => {
-  const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+  const [selectedStartTime, setSelectedStartTime] = useState(new Date());
+  const [selectedEndTime, setSelectedEndTime] = useState(new Date());
   const [bookingConfirmationOpen, setBookingConfirmationOpen] = useState(false);
   const [bookingInProgress, setBookingInProgress] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
@@ -29,7 +32,7 @@ const Room = ({ room }) => {
     setBookingConfirmationOpen(true);
   };
 
-  const confirmBooking = async () => {``
+  const confirmBooking = async () => {
     setBookingInProgress(true);
     setBookingSuccess(false);
     setBookingError(null);
@@ -37,7 +40,8 @@ const Room = ({ room }) => {
     try {
       const bookingSuccess = await submitBooking(
         room.id,
-        format(selectedDateTime, 'yyyy-MM-dd HH:mm:ss')
+        format(selectedStartTime, 'yyyy-MM-dd HH:mm:ss'),
+        format(selectedEndTime, 'yyyy-MM-dd HH:mm:ss')
       );
       setBookingInProgress(false);
       setBookingSuccess(bookingSuccess);
@@ -47,17 +51,22 @@ const Room = ({ room }) => {
     }
   };
 
-  const handleDateTimeChange = (newValue) => {
-    setSelectedDateTime(newValue);
+  const handleStartTimeChange = (newValue) => {
+    setSelectedStartTime(newValue);
   };
 
-  const submitBooking = async (roomId, selectedDateTime) => {
+  const handleEndTimeChange = (newValue) => {
+    setSelectedEndTime(newValue);
+  };
+
+  const submitBooking = async (roomId, startDateTime, endDateTime) => {
     try {
       const response = await axios.post(
         'http://localhost:3001/api/booking/create',
         {
           roomId,
-          date: selectedDateTime,
+          startTime: startDateTime,
+          endTime: endDateTime,
         }
       );
       return true;
@@ -73,41 +82,54 @@ const Room = ({ room }) => {
   };
 
   return (
-    <div>
-      <Typography variant="h5">{room.roomType}</Typography>
-      <ImageList cols={2} rowHeight={200}>
-        {room.images.map((image, index) => (
-          <ImageListItem key={index}>
-            <img src={image} alt={`Room ${index}`} />
-          </ImageListItem>
-        ))}
-      </ImageList>
-      <Typography variant="subtitle1">Hotel: {room.hotelName}</Typography>
-      <DatePicker
-        selected={selectedDateTime}
-        onChange={handleDateTimeChange}
-        showTimeSelect
-        dateFormat="Pp"
+    <Card style={{ marginBottom: '20px', width: '80%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: '#f5f5f5', color: '#333' }}>
+      <CardMedia
+        component="img"
+        height="200"
+        image={process.env.PUBLIC_URL + '/img.jpg'}
+        alt="Room"
+        style={{ borderRadius: '8px 8px 0 0' }}
       />
-      <Button variant="contained" color="primary" onClick={handleBookNow}>
-        Book Now
-      </Button>
-
-      <Snackbar
-        open={bookingSuccess || !!bookingError}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        {bookingSuccess ? (
-          <Alert onClose={handleCloseSnackbar} severity="success">
-            Booking successful!
-          </Alert>
-        ) : (
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            {bookingError || 'An error occurred while booking.'}
-          </Alert>
-        )}
-      </Snackbar>
+      <CardContent>
+        <Typography variant="h6" style={{ marginBottom: '12px' }}>
+          {room.room_type} , Room for {room.capacity} People
+        </Typography>
+        <Typography variant="subtitle1" style={{ marginBottom: '12px' }}>
+          Hotel: {room.hotel_name}
+        </Typography>
+        <Typography variant="subtitle1" style={{ marginBottom: '12px' }}>
+          Location: {room.location}
+        </Typography>
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
+          <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
+            Start Time:
+          </Typography>
+          <DatePicker
+            selected={selectedStartTime}
+            onChange={handleStartTimeChange}
+            showTimeSelect
+            dateFormat="Pp"
+            style={{ width: '100%' }}
+          />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
+            End Time:
+          </Typography>
+          <DatePicker
+            selected={selectedEndTime}
+            onChange={handleEndTimeChange}
+            showTimeSelect
+            dateFormat="Pp"
+            style={{ width: '100%' }}
+          />
+        </div>
+      </CardContent>
+      <CardActions style={{ justifyContent: 'flex-end' }}>
+        <Button variant="contained" color="primary" onClick={handleBookNow}>
+          Book Now
+        </Button>
+      </CardActions>
 
       <Dialog open={bookingConfirmationOpen} onClose={() => setBookingConfirmationOpen(false)}>
         <DialogTitle>Confirm Booking</DialogTitle>
@@ -125,7 +147,19 @@ const Room = ({ room }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+
+      <Snackbar open={bookingSuccess || !!bookingError} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        {bookingSuccess ? (
+          <Alert onClose={handleCloseSnackbar} severity="success">
+            Booking successful!
+          </Alert>
+        ) : (
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {bookingError || 'An error occurred while booking.'}
+          </Alert>
+        )}
+      </Snackbar>
+    </Card>
   );
 };
 

@@ -79,8 +79,13 @@ exports.getuserRooms = async (req, res) => {
 
     // send the bookings array from the user
     const bookings = user.bookings;
+    const userRoomId = bookings.map((booking)=> booking.room_id);
 
-    res.status(200).json({ bookings });
+ const foundRooms = await Room.findById(userRoomId.map((room) => room._id));
+
+    
+
+    res.status(200).json({ foundRooms });
   } catch (error) {
     console.error("Error fetching user rooms:", error);
     res.status(500).json({ error: "Internal Server Error" });

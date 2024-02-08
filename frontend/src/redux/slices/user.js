@@ -103,6 +103,12 @@ export const registerUser = (username, email, password) => async (dispatch) => {
      dispatch(registerFailure(error.message || "Registration failed"));
     }
   };
+
+
+
+
+
+
   
 // Booking Slice
 const bookingInitialState = {
@@ -111,28 +117,6 @@ const bookingInitialState = {
   bookingSuccess: false,
 };
 
-export const bookRoom = createAsyncThunk(
-  "booking/bookRoom",
-  async ({ room_Id, start_Time, end_Time }, { dispatch }) => {
-    try {
-      dispatch(bookRoomRequest());
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://example.com/api/book-room",
-        { room_Id, start_Time, end_Time },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      dispatch(bookRoomSuccess());
-      dispatch(updateBookings(response.data.user.bookings)); // Update user's bookings
-    } catch (error) {
-      throw error.message || "Booking failed";
-    }
-  }
-);
 
 export const bookingSlice = createSlice({
   name: "booking",
@@ -167,6 +151,49 @@ export const {
   clearBookingError,
   clearBookingStatus,
 } = bookingSlice.actions;
+
+export const bookRoom = createAsyncThunk(
+  "booking/bookRoom",
+  async ({ room_Id, start_Time, end_Time }, { dispatch }) => {
+    try {
+      dispatch(bookRoomRequest());
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://example.com/api/book-room",
+        { room_Id, start_Time, end_Time },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      dispatch(bookRoomSuccess());
+      dispatch(updateBookings(response.data.user.bookings)); // Update user's bookings
+    } catch (error) {
+      throw error.message || "Booking failed";
+    }
+  }
+);
+
+
+export const getUserRooms = createAsyncThunk("booking/userRooms",
+ async({dispatch})=>{
+  try{
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      `http://localhost:3001/api/user/bookings/:user._id`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    dispatch(updateBookings(response.data.foundRooms))
+  }catch(error){
+    throw error.message || "Error Finding your Bookings";
+  }
+ }
+)
 
 // Export both reducers with unique names
 export { authSlice, bookingSlice as bookingSliceReducer };
