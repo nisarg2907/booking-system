@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const reservationController = require("../controllers/reservation")
-router.get("/:userId",reservationController.getuserRooms)
+const reservationController = require("../controllers/reservation");
+const authMiddleware = require("../middleware/auth");
+router.get("/:userId",  authMiddleware.verifyToken,reservationController.getuserRooms);
 
-module.exports=router;
+module.exports = router;

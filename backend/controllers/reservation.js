@@ -1,7 +1,6 @@
-// controllers/reservationController.js
-const Reservation = require('../models/reservation');
-const Room = require('../models/room');
-const User = require('../models/user');
+const Reservation = require("../models/reservation");
+const Room = require("../models/room");
+const User = require("../models/user");
 
 // Controller for booking a room
 exports.bookRoom = async (req, res) => {
@@ -10,7 +9,7 @@ exports.bookRoom = async (req, res) => {
 
     // Validate input data
     if (!user_id || !room_id || !start_time || !end_time) {
-      return res.status(400).json({ error: 'Invalid input data.' });
+      return res.status(400).json({ error: "Invalid input data." });
     }
 
     // Check if the user and room exist
@@ -18,7 +17,7 @@ exports.bookRoom = async (req, res) => {
     const roomExists = await Room.findById(room_id);
 
     if (!userExists || !roomExists) {
-      return res.status(404).json({ error: 'User or room not found.' });
+      return res.status(404).json({ error: "User or room not found." });
     }
 
     // Check if the room is available for the given time range
@@ -31,7 +30,9 @@ exports.bookRoom = async (req, res) => {
     });
 
     if (existingReservations.length > 0) {
-      return res.status(409).json({ error: 'Room is already booked for the selected time range.' });
+      return res
+        .status(409)
+        .json({ error: "Room is already booked for the selected time range." });
     }
 
     // Create a new reservation
@@ -46,36 +47,42 @@ exports.bookRoom = async (req, res) => {
     await newReservation.save();
 
     // Update the Room's bookings array
-    await Room.findByIdAndUpdate(room_id, { $push: { bookings: newReservation._id } });
+    await Room.findByIdAndUpdate(room_id, {
+      $push: { bookings: newReservation._id },
+    });
 
     // Update the User's bookings array
-    await User.findByIdAndUpdate(user_id, { $push: { bookings: newReservation._id } });
+    await User.findByIdAndUpdate(user_id, {
+      $push: { bookings: newReservation._id },
+    });
 
-    res.status(201).json({ message: 'Room booked successfully.', reservation: newReservation });
+    res.status(201).json({
+      message: "Room booked successfully.",
+      reservation: newReservation,
+    });
   } catch (error) {
-    console.error('Error booking room:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error booking room:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 exports.getuserRooms = async (req, res) => {
   const userId = req.params.userId;
 
   try {
     // Find the user by userId and populate the bookings field with reservation details
-    const user = await User.findById(userId).populate('bookings');
+    const user = await User.findById(userId).populate("bookings");
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
+      return res.status(404).json({ error: "User not found." });
     }
 
-    // Extract and send the bookings array from the user
+    // send the bookings array from the user
     const bookings = user.bookings;
 
     res.status(200).json({ bookings });
   } catch (error) {
-    console.error('Error fetching user rooms:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error fetching user rooms:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
