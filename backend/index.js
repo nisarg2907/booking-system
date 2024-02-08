@@ -1,16 +1,16 @@
 const express = require("express");
-const env = require("dotenv");
+const dotenv = require("dotenv");
 const appRoutes = require("./routes");
 const cors = require("cors");
 const mongoose = require("mongoose");
-env.config();
+dotenv.config();
 
 
 const app = express();
 const Dburl = process.env.DB_URL;
 app.use(cors())
 app.use(express.json());
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 app.use("/api",appRoutes);
 app.listen(port,()=>{
