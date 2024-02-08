@@ -115,6 +115,7 @@ const bookingInitialState = {
   isLoading: false,
   error: null,
   bookingSuccess: false,
+  bookings:[],
 };
 
 
@@ -141,6 +142,9 @@ export const bookingSlice = createSlice({
     clearBookingStatus: (state) => {
       state.bookingSuccess = false;
     },
+    populateUserBookings:(state,action)=>{
+      state.bookings = action.payload;
+    }
   },
 });
 
@@ -150,6 +154,7 @@ export const {
   bookRoomFailure,
   clearBookingError,
   clearBookingStatus,
+  populateUserBookings
 } = bookingSlice.actions;
 
 export const bookRoom = createAsyncThunk(
@@ -177,18 +182,22 @@ export const bookRoom = createAsyncThunk(
 
 
 export const getUserRooms = createAsyncThunk("booking/userRooms",
- async({dispatch})=>{
+ async({userId},{dispatch})=>{
   try{
     const token = localStorage.getItem("token");
+    const userid=userId
+    console.log(userid)
+    console.log("req initiated");
     const response = await axios.get(
-      `http://localhost:3001/api/user/bookings/:user._id`,
+      `http://localhost:3001/api/user/bookings/${userid}`,
       {
         headers: {
           Authorization: token,
         },
       }
     );
-    dispatch(updateBookings(response.data.foundRooms))
+    console.log("req reached here")
+    dispatch(populateUserBookings(response.data.foundRooms))
   }catch(error){
     throw error.message || "Error Finding your Bookings";
   }
