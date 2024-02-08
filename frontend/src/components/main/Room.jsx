@@ -29,7 +29,7 @@ const Room = ({ room }) => {
     setBookingConfirmationOpen(true);
   };
 
-  const confirmBooking = async () => {
+  const confirmBooking = async () => {``
     setBookingInProgress(true);
     setBookingSuccess(false);
     setBookingError(null);

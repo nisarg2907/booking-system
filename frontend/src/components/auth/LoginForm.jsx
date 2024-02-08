@@ -4,10 +4,15 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import * as yup from 'yup'; // Your Yup import
-import axios from 'axios'; // Or use fetch based on your preference
+import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/slices/user';
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+  console.log(authState);
+
   const validationSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Email is required'),
     password: yup.string().required('Password is required'),
@@ -22,13 +27,11 @@ const LoginForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(`http://localhost:3001/api/user/login`, values);
-
-        console.log('Backend response:', response);
-       
-        if(response.status===200)navigate("/home");
+        dispatch(loginUser(values.email, values.password));
+        navigate("/home");
+        
       } catch (error) {
-        console.error('Error during backend call:', error);
+        console.error('Error during login:', error);
         // Handle errors appropriately, e.g., display an error message to the user
       }
     },
@@ -92,15 +95,16 @@ const LoginForm = () => {
           <Button
             style={{
               marginTop: '20px',
-              background: '#4caf50', 
-              color: '#fff', 
+              background: '#4caf50',
+              color: '#fff',
               fontWeight: 'bold',
             }}
             variant="contained"
             fullWidth
             type="submit"
+            disabled={authState.isLoading}
           >
-            Login
+            {authState.isLoading ? 'Logging In...' : 'Login'}
           </Button>
         </form>
         <div style={{ marginTop: '20px', fontSize: '16px', color: '#555' }}>

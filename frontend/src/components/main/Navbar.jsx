@@ -1,12 +1,22 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
-
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../redux/slices/user';
 
-const Navbar = ({ user }) => {
-    
+const Navbar = () => {
+  const authState = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  console.log(authState);
+
+  const handleLogout = () => {
+    dispatch(logout()); // Dispatch the logout action
+    navigate('/login'); // Redirect to the login page
+  };
+
   return (
     <AppBar
       position="sticky"
@@ -21,23 +31,19 @@ const Navbar = ({ user }) => {
         alignItems: 'center',
       }}
     >
-     
-        <div>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Welcome, {user}
-          </Typography>
-        </div>
-     
+      <div>
+        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
+          Welcome, {authState.user?.username}
+        </Typography>
+      </div>
       <div style={{ display: 'flex', gap: '1rem', marginLeft: 'auto' }}>
-      <Button color="inherit" component={Link} to="/dashboard">
+        <Button color="inherit" component={Link} to="/dashboard">
           Dashboard
         </Button>
-        <Button color="inherit" component={Link} to="/login">
+        <Button color="inherit" onClick={handleLogout}>
           Logout
         </Button>
-       
       </div>
-     
     </AppBar>
   );
 };

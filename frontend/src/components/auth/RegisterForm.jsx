@@ -5,9 +5,15 @@ import Container from '@mui/material/Container';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup'; // Your Yup import
-import axios from 'axios'; // Or use fetch based on your preference
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from "../../redux/slices/user";
 
 const RegisterForm = () => {
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+  console.log(authState);
+  
+  
   const validationSchema = yup.object().shape({
     username: yup.string().required('Username is required'),
     email: yup.string().email('Invalid email').required('Email is required'),
@@ -25,11 +31,10 @@ const RegisterForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(`http://localhost:3001/api/user/register`, values);
-
-        console.log('Backend response:', response);
+        dispatch(registerUser(values.username,values.email, values.password)).then(()=>navigate("/home"));
        
-        if(response.status===200)navigate("/home");
+       
+        
         
       } catch (error) {
         console.error('Error during backend call:', error);

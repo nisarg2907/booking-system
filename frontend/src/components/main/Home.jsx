@@ -7,7 +7,7 @@ import RoomsList from './RoomsList';
 const Home = () => {
   return (
     <>
-      <Navbar user="John"  />
+      <Navbar   />
       <RoomsList/>
       <DashBoard/>
     </>
