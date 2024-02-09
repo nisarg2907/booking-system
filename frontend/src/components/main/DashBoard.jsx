@@ -74,7 +74,7 @@ const DashBoard = () => {
           ))}
         </div>
       ) : (
-        <Typography variant="h5" style={{ marginBottom: '16px', color: '#ffffff' }}>
+        <Typography variant="h5" style={{ marginBottom: '16px', color: '#000000' }}>
           You don't have any current bookings.
         </Typography>
       )}

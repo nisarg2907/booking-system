@@ -6,8 +6,7 @@ import axios from "axios";
 const authInitialState = {
   user: null,
   isLoggedIn: false,
-  isLoading: false,
-  error: null
+
 };
 
 const authSlice = createSlice({
@@ -178,7 +177,8 @@ export const bookRoom = createAsyncThunk(
       dispatch(bookRoomSuccess());
       dispatch(updateBookings(response.data.room)); 
     } catch (error) {
-      throw error.message || "Booking failed";
+      console.log(error.message , "Booking failed Room is already booked");
+      dispatch(bookRoomFailure(error));
     }
   }
 );
