@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Navbar from './Navbar';
 import RoomsList from './RoomsList';
 import { useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 
 const Home = () => {
-  const navigate = useNavigate();
+  
   const authState = useSelector((state) => state.auth);
   const isLoggedIn = authState.isLoggedIn;
   const id = authState.user._id;

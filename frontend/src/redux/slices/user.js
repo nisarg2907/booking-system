@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const backendDomain = "https://booking-2o40.onrender.com";
 // Auth Slice
 const authInitialState = {
   user: null,
@@ -67,7 +68,7 @@ export const {
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     dispatch(loginRequest());
-    const response = await axios.post("http://localhost:3001/api/user/login", {
+    const response = await axios.post(`${backendDomain}/api/user/login`, {
       email,
       password,
     });
@@ -85,7 +86,7 @@ export const registerUser = (username, email, password) => async (dispatch) => {
     try {
       dispatch(registerRequest());
       console.log("Request initiated");
-      const response = await axios.post("http://localhost:3001/api/user/register", {
+      const response = await axios.post(`${backendDomain}/api/user/register`, {
         username,
         email,
         password,
@@ -164,7 +165,7 @@ export const bookRoom = createAsyncThunk(
       console.log("booking req reached");
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3001/api/room/book-room",
+        `${backendDomain}/api/room/book-room`,
         { user_id,room_id, start_time, end_time  },
         {
           headers: {
@@ -188,11 +189,11 @@ export const getUserRooms = createAsyncThunk("booking/userRooms",
  async({userId},{dispatch})=>{
   try{
     const token = localStorage.getItem("token");
-    const userid=userId
+   
     
     
     const response = await axios.get(
-      `http://localhost:3001/api/user/bookings/${userid}`,
+      `${backendDomain}/api/user/bookings/${userId}`,
       {
         headers: {
           Authorization: token,

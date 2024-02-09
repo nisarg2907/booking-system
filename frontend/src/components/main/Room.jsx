@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -18,7 +18,11 @@ import {
   CardMedia,
 } from '@mui/material';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateBookings } from '../../redux/slices/user';
+
+
+const backendDomain = "https://booking-2o40.onrender.com";
 
 const Room = ({ room, showButton = true }) => {
   const [selectedStartTime, setSelectedStartTime] = useState(new Date());
@@ -28,6 +32,8 @@ const Room = ({ room, showButton = true }) => {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState(null);
   const [invalidTimeError, setInvalidTimeError] = useState(null);
+  const dispatch = useDispatch();
+  
 const userId = useSelector((state)=>state.auth.user._id);
   const handleBookNow = () => {
     setInvalidTimeError(null);
@@ -49,7 +55,7 @@ const userId = useSelector((state)=>state.auth.user._id);
       console.log("booking req reached");
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3001/api/room/book-room",
+        `${backendDomain}/api/room/book-room`,
         { user_id: userId, room_id: room._id, start_time: selectedStartTime, end_time: selectedEndTime },
         { headers: { Authorization: token } }
       );
@@ -58,7 +64,10 @@ const userId = useSelector((state)=>state.auth.user._id);
       console.log(response);
 
       // Handle success
+     
       setBookingSuccess(true);
+      dispatch(updateBookings(response.data.foundRooms));
+     
     } catch (error) {
       // Handle errors
       console.log(error.message, "Booking failed Room is already booked");
