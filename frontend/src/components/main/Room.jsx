@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateBookings } from '../../redux/slices/user';
 
 
-const backendDomain = "https://booking-2o40.onrender.com";
+const backendDomain = "http://localhost:3001";
 
 const Room = ({ room, showButton = true }) => {
   const [selectedStartTime, setSelectedStartTime] = useState(new Date());
@@ -48,7 +48,9 @@ const userId = useSelector((state)=>state.auth.user._id);
     try {
       // Validate start time and end time
       if (selectedStartTime >= selectedEndTime || selectedEndTime - selectedStartTime < 3 * 60 * 60 * 1000) {
-        throw new Error(' Booking slots for the rooms can not be less than 3 hours.');
+
+         setBookingError(' Booking slots for the rooms can not be less than 3 hours.');
+         return;
       }
 
       // Make the API call
@@ -71,7 +73,7 @@ const userId = useSelector((state)=>state.auth.user._id);
     } catch (error) {
       // Handle errors
       console.log(error.message, "Booking failed Room is already booked");
-      setBookingError( 'This Room is already Booked ,please select different room or date.');
+      setBookingError( 'This Room is already Booked ,please select different room or date .');
     } finally {
       setBookingInProgress(false);
       setBookingConfirmationOpen(false);

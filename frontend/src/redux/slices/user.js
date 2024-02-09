@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const backendDomain = "https://booking-2o40.onrender.com";
+const backendDomain = "http://localhost:3001";
 // Auth Slice
 const authInitialState = {
   user: null,
@@ -188,6 +188,8 @@ export const bookRoom = createAsyncThunk(
 export const getUserRooms = createAsyncThunk("booking/userRooms",
  async({userId},{dispatch})=>{
   try{
+
+    
     const token = localStorage.getItem("token");
    
     
