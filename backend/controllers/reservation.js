@@ -71,6 +71,7 @@ exports.bookRoom = async (req, res) => {
 
 exports.getuserRooms = async (req, res) => {
   const userId = req.params.userId;
+  
 
   try {
     // Find the user by userId and populate the bookings field with reservation details

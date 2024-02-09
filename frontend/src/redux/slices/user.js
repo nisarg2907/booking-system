@@ -160,7 +160,7 @@ export const bookRoom = createAsyncThunk(
   "booking/bookRoom",
   async ({  user_id,room_id, start_time, end_time }, { dispatch }) => {
     try {
-      dispatch(bookRoomRequest());
+      
       console.log("booking req reached");
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -174,11 +174,11 @@ export const bookRoom = createAsyncThunk(
       );
       console.log("booking req done");
       console.log(response);
-      dispatch(bookRoomSuccess());
+      
       dispatch(updateBookings(response.data.room)); 
     } catch (error) {
       console.log(error.message , "Booking failed Room is already booked");
-      dispatch(bookRoomFailure(error));
+      
     }
   }
 );

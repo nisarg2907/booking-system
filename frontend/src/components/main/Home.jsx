@@ -8,6 +8,8 @@ const Home = () => {
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
   const isLoggedIn = authState.isLoggedIn;
+  const id = authState.user._id;
+  console.log(id);
 
   // useEffect(() => {
   //   if (!isLoggedIn) {
