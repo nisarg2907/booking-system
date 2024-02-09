@@ -5,22 +5,21 @@ import { getUserRooms } from '../../redux/slices/user';
 import {
   Container,
   Typography,
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
+  Button
 } from '@mui/material';
+import Room from './Room';
 
 const DashBoard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user._id);
+  const bookings = useSelector((state) => state.booking.bookings);
 
   useEffect(() => {
     dispatch(getUserRooms({ userId: userId }));
-  }, [dispatch, userId]);
+  }, [dispatch, userId,bookings]);
 
-  const bookings = useSelector((state) => state.booking.bookings);
+
 
   return (
     <Container
@@ -48,34 +47,7 @@ const DashBoard = () => {
         Your Bookings
       </Typography>
           {bookings.map((booking) => (
-            <Card
-              key={booking.room_id}
-              style={{
-                width: '80%',
-                margin: '8px',
-                backgroundColor: '#fff',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: '16px',
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="140"
-                image={booking.room.image} // Replace with the actual image property from your Room model
-                alt="Room"
-                style={{ marginBottom: '8px' }}
-              />
-              <CardContent style={{ textAlign: 'center' }}>
-                <Typography variant="h5" style={{ marginBottom: '8px' }}>
-                  {booking.room.name}
-                </Typography>
-                <Typography variant="body1">
-                  {/* Add other room details as needed */}
-                </Typography>
-              </CardContent>
-            </Card>
+            <Room room={booking} showButton={false}  />
           ))}
         </div>
       ) : (

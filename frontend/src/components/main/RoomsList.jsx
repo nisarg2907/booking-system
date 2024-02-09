@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Room from './Room';
-import { Snackbar, Alert, Typography, Container } from '@mui/material';
+import {  Typography, Container } from '@mui/material';
 
 const RoomList = () => {
   const [roomList, setRoomList] = useState([]);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [bookingError, setBookingError] = useState(null);
+
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -21,10 +20,7 @@ const RoomList = () => {
     fetchRooms();
   }, []);
 
-  const handleCloseSnackbar = () => {
-    setBookingSuccess(false);
-    setBookingError(null);
-  };
+ 
 
   return (
     <Container maxWidth="md" style={{ marginTop: '32px', marginBottom: '32px' }}>
@@ -33,21 +29,9 @@ const RoomList = () => {
       </Typography>
       <div style={{ display: 'flex',  flexDirection: 'column',justifyContent: 'center' }}>
         {roomList.map((room) => (
-          <Room key={room.id} room={room} setBookingSuccess={setBookingSuccess} setBookingError={setBookingError} />
+          <Room key={room.id} room={room}  />
         ))}
       </div>
-
-      <Snackbar open={bookingSuccess || !!bookingError} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        {bookingSuccess ? (
-          <Alert onClose={handleCloseSnackbar} severity="success">
-            Booking successful!
-          </Alert>
-        ) : (
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            {bookingError || 'An error occurred while booking.'}
-          </Alert>
-        )}
-      </Snackbar>
     </Container>
   );
 };

@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 
-const Room = ({ room }) => {
+const Room = ({ room,showButton = true }) => {
   const [selectedStartTime, setSelectedStartTime] = useState(new Date());
   const [selectedEndTime, setSelectedEndTime] = useState(new Date());
   const [bookingConfirmationOpen, setBookingConfirmationOpen] = useState(false);
@@ -126,9 +126,9 @@ const Room = ({ room }) => {
         </div>
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }}>
-        <Button variant="contained" color="primary" onClick={handleBookNow}>
+       {showButton &&  <Button variant="contained" color="primary" onClick={handleBookNow}>
           Book Now
-        </Button>
+        </Button>}
       </CardActions>
 
       <Dialog open={bookingConfirmationOpen} onClose={() => setBookingConfirmationOpen(false)}>
