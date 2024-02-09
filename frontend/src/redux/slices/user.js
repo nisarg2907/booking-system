@@ -159,13 +159,13 @@ export const {
 
 export const bookRoom = createAsyncThunk(
   "booking/bookRoom",
-  async ({ room_Id, start_Time, end_Time }, { dispatch }) => {
+  async ({ user_Id,room_Id, start_Time, end_Time }, { dispatch }) => {
     try {
       dispatch(bookRoomRequest());
       const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://example.com/api/book-room",
-        { room_Id, start_Time, end_Time },
+        { user_Id,room_Id, start_Time, end_Time },
         {
           headers: {
             Authorization: token,
