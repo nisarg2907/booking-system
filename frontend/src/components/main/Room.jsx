@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 
-const Room = ({ room,showButton = true }) => {
+const Room = ({ room, showButton = true }) => {
   const [selectedStartTime, setSelectedStartTime] = useState(new Date());
   const [selectedEndTime, setSelectedEndTime] = useState(new Date());
   const [bookingConfirmationOpen, setBookingConfirmationOpen] = useState(false);
@@ -100,35 +100,41 @@ const Room = ({ room,showButton = true }) => {
         <Typography variant="subtitle1" style={{ marginBottom: '12px' }}>
           Location: {room.location}
         </Typography>
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-          <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
-            Start Time:
-          </Typography>
-          <DatePicker
-            selected={selectedStartTime}
-            onChange={handleStartTimeChange}
-            showTimeSelect
-            dateFormat="Pp"
-            style={{ width: '100%' }}
-          />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
-            End Time:
-          </Typography>
-          <DatePicker
-            selected={selectedEndTime}
-            onChange={handleEndTimeChange}
-            showTimeSelect
-            dateFormat="Pp"
-            style={{ width: '100%' }}
-          />
-        </div>
+        {showButton && (
+          <div>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
+              <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
+                Start Time:
+              </Typography>
+              <DatePicker
+                selected={selectedStartTime}
+                onChange={handleStartTimeChange}
+                showTimeSelect
+                dateFormat="Pp"
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="subtitle1" style={{ marginBottom: '6px' }}>
+                End Time:
+              </Typography>
+              <DatePicker
+                selected={selectedEndTime}
+                onChange={handleEndTimeChange}
+                showTimeSelect
+                dateFormat="Pp"
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
+        )}
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }}>
-       {showButton &&  <Button variant="contained" color="primary" onClick={handleBookNow}>
-          Book Now
-        </Button>}
+        {showButton && (
+          <Button variant="contained" color="primary" onClick={handleBookNow}>
+            Book Now
+          </Button>
+        )}
       </CardActions>
 
       <Dialog open={bookingConfirmationOpen} onClose={() => setBookingConfirmationOpen(false)}>

@@ -159,21 +159,24 @@ export const {
 
 export const bookRoom = createAsyncThunk(
   "booking/bookRoom",
-  async ({ user_Id,room_Id, start_Time, end_Time }, { dispatch }) => {
+  async ({  user_id,room_id, start_time, end_time }, { dispatch }) => {
     try {
       dispatch(bookRoomRequest());
+      console.log("booking req reached");
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://example.com/api/book-room",
-        { user_Id,room_Id, start_Time, end_Time },
+        "http://localhost:3001/api/room/book-room",
+        { user_id,room_id, start_time, end_time  },
         {
           headers: {
             Authorization: token,
           },
         }
       );
+      console.log("booking req done");
+      console.log(response);
       dispatch(bookRoomSuccess());
-      dispatch(updateBookings(response.data.user.bookings)); // Update user's bookings
+      dispatch(updateBookings(response.data.room)); 
     } catch (error) {
       throw error.message || "Booking failed";
     }
@@ -186,8 +189,8 @@ export const getUserRooms = createAsyncThunk("booking/userRooms",
   try{
     const token = localStorage.getItem("token");
     const userid=userId
-    console.log(userid)
-    console.log("req initiated");
+    
+    
     const response = await axios.get(
       `http://localhost:3001/api/user/bookings/${userid}`,
       {
@@ -196,7 +199,7 @@ export const getUserRooms = createAsyncThunk("booking/userRooms",
         },
       }
     );
-    console.log("req reached here")
+    console.log(response);
     dispatch(populateUserBookings(response.data.foundRooms))
   }catch(error){
     throw error.message || "Error Finding your Bookings";

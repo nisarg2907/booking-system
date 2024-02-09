@@ -2,7 +2,6 @@ const Reservation = require("../models/reservation");
 const Room = require("../models/room");
 const User = require("../models/user");
 
-// Controller for booking a room
 exports.bookRoom = async (req, res) => {
   try {
     const { user_id, room_id, start_time, end_time } = req.body;
@@ -56,9 +55,13 @@ exports.bookRoom = async (req, res) => {
       $push: { bookings: newReservation._id },
     });
 
+    // Retrieve the room details
+    const bookedRoom = await Room.findById(room_id);
+
     res.status(201).json({
       message: "Room booked successfully.",
       reservation: newReservation,
+      room: bookedRoom, // Include the room details in the response
     });
   } catch (error) {
     console.error("Error booking room:", error);
@@ -77,13 +80,30 @@ exports.getuserRooms = async (req, res) => {
       return res.status(404).json({ error: "User not found." });
     }
 
-    // send the bookings array from the user
-    const bookings = user.bookings;
-    const userRoomId = bookings.map((booking)=> booking.room_id);
+    // Extract relevant information from each booking
+    const userRooms = user.bookings.map((booking) => {
+      return {
+        room_id: booking.room_id,
+        start_time: booking.start_time,
+        end_time: booking.end_time,
+      };
+    });
 
- const foundRooms = await Room.findById(userRoomId.map((room) => room._id));
-
-    
+    // Retrieve corresponding room details
+    const foundRooms = await Promise.all(
+      userRooms.map(async (room) => {
+        const roomDetails = await Room.findById(room.room_id);
+        return {
+          _id: roomDetails._id,
+          room_type: roomDetails.room_type,
+          capacity: roomDetails.capacity,
+          location: roomDetails.location,
+          hotel_name: roomDetails.hotel_name,
+          start_time: room.start_time,
+          end_time: room.end_time,
+        };
+      })
+    );
 
     res.status(200).json({ foundRooms });
   } catch (error) {
@@ -91,3 +111,4 @@ exports.getuserRooms = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
