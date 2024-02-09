@@ -7,7 +7,7 @@ const morgan = require("morgan");
 dotenv.config();
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://aquamarine-pie-4210a9.netlify.app/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 };
